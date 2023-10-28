@@ -9,6 +9,7 @@ typedef struct{
     int id_proceso;
     int tamanio_proceso; /*En KiloBytes*/
     float tiempo_ejecucion; /*En unidades de tiempo*/
+    int necesidad_marcos;
 } proceso;
 
 /*Marco de página*/
@@ -23,7 +24,7 @@ typedef marco_pagina tabla_paginas[2048];
 typedef proceso cola_procesos[500];
 
 /*Prototipo de funciones*/
-int crear_proceso(int tamanio, float tiempo_ejecucion);
+int crear_proceso(proceso Proceso, marco_pagina Marco);
 
 /*Programa principal*/
 int main(){
@@ -32,9 +33,9 @@ int main(){
     tabla_paginas Tabla;
     cola_procesos Cola; /*USAR FCFS???????????????????????*/
 
-    int memoria_fisica = tamano_memoria_fisica();
-
-    int tamano_marco;
+    int memoria_fisica = tamano_memoria_fisica(); /*Tamaño de la memoria física*/
+    int tamano_marco = 8*1024; /*1KB*/
+    
 
 
     /*Menú y ejecución del aplicativo*/
@@ -113,14 +114,34 @@ int seleccionar_unidad_memoria(){
     return 0;
 }
 
-int crear_proceso(int tamanio, float tiempo_ejecucion){
-    proceso Proceso;
-    Proceso.id_proceso = 0;
-    int factor = seleccionar_unidad_memoria();
-    /*Tamaño del proceso en bits*/
-    Proceso.tamanio_proceso = tamanio * factor;
+/*Función que retorna la necesidad de marcos de un */
+int necesidad_marco(marco_pagina Marco, proceso Proceso){
+    return ceil(Proceso.tamanio_proceso/Marco.tamanio_marco);
+}
 
+int crear_proceso(proceso Proceso, marco_pagina Marco){
+    proceso Proceso;
+    int tamanio;
+    float tiempo_ejecucion;
+
+    /*Ingresamos los datos del proceso a crear*/
+    printf("Ingrese el tamaño del proceso:\n");
+    scanf("%d",&tamanio);
+    printf("Ingrese el tiempo de ejecución del proceso:\n");
+    scanf("%d",&tiempo_ejecucion);
+
+    /*Asignamos los datos al proceso creado*/
+    Proceso.id_proceso = 0;
+    int factor = seleccionar_unidad_memoria();  /*Cargamos el factor para transformar la memoria del proceso a bits*/
+    Proceso.tamanio_proceso = tamanio * factor; /*Tamaño del proceso en bits*/
     Proceso.tiempo_ejecucion = tiempo_ejecucion;
+    Proceso.necesidad_marcos = necesidad_marco(Marco,Proceso);  /*Calculamos cuantos marcos se necesitan para el proceso*/
+    
+    /*Insertamos el proceso a la cola de procesos*/
+    /*-----------------------------*/
+    /*-----------------------------*/
+    /*-----------------------------*/
+
     return 0;
 }
 
@@ -132,13 +153,8 @@ int tamano_memoria_fisica(){
     return tamano * factor;
 }
 
-int tamano_marco(){
-
-}
-
-
 int asignar_marcos(proceso Proceso, int tamanio_pagina, tabla_paginas Tabla){
-    int cantidad_marcos = ceil(Proceso.tamanio_proceso / tamanio_pagina);
+    int cantidad_marcos = floor(Proceso.tamanio_proceso / tamanio_pagina);
     for(int i=0; i<cantidad_marcos; i++){
         Tabla[i].id_proceso_asignado = Proceso.id_proceso;
     }
