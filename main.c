@@ -81,7 +81,8 @@ int main(){
             break;
 
             case 3:
-                asignar_bloques(&ColaProcesos,cantidad_marcos);
+                // necesidad_bloques();
+                asignar_bloques(ColaProcesos,cantidad_marcos);
             break;
         }
     }
@@ -223,6 +224,9 @@ int asignar_bloques(struct proceso *Proceso, long double cantidad_marcos){
     printf("declaracion\n");
     long double asignacion_proporcional;
     printf("funcion\n");
+
+    // struct proceso *copia = Proceso;
+
     long double total_necesidad = necesidad_bloques(Proceso);
 
     printf("while\n");
@@ -234,4 +238,5 @@ int asignar_bloques(struct proceso *Proceso, long double cantidad_marcos){
 	}
 
     /*VER LO DE LA FRAGMENTACIÓN INTERNA*/
+    return 0;
 }
