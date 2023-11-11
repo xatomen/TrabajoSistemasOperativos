@@ -61,10 +61,11 @@ int main(){
 
     /*Menú y ejecución del aplicativo*/
     while(opcion!=0){
-        printf("Menu:\n");
+        
+        printf("------Menu------\n");
         printf("1. Agregar proceso\n");
-        printf("2. Imprimir procesos\n");
-        printf("3. Asignar bloques\n");
+        printf("2. Eliminar proceso\n");
+        printf("3. Comenzar simulación\n");
         printf("0. Salir\n");
         printf("Ingrese una opcion:\n");
         scanf("%d",&opcion);
@@ -75,14 +76,19 @@ int main(){
             case 1:
                 crear_proceso(&ColaProcesos,tamanio_marco);
             break;
-
+            
             case 2:
-                imprimir_procesos(ColaProcesos);
+
             break;
 
             case 3:
-                // necesidad_bloques();
-                asignar_bloques(ColaProcesos,cantidad_marcos);
+                if(ColaProcesos!=NULL){
+                    asignar_bloques(ColaProcesos,cantidad_marcos);
+                    imprimir_procesos(ColaProcesos);
+                }
+                else{
+                    printf("Simulación terminada\n");
+                }
             break;
         }
     }
